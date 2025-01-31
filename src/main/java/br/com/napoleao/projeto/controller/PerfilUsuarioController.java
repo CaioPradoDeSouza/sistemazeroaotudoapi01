@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.napoleao.projeto.dto.PerfilUsuarioDTO;
-import br.com.napoleao.projeto.dto.UsuarioDTO;
 import br.com.napoleao.projeto.service.PerfilUsuarioService;
 
 @RestController

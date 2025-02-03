@@ -15,15 +15,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="NPL_PERFIL_USUARIO")
+@Table(name = "NPL_PERFIL_USUARIO")
 @Getter
 @Setter
 @NoArgsConstructor
+
 public class PerfilUsuarioEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+	private long id;
 	
 	@ManyToOne
 	@JoinColumn(name = "ID_USUARIO")
@@ -31,7 +32,7 @@ public class PerfilUsuarioEntity {
 	
 	
 	@ManyToOne
-	@JoinColumn(name="ID_PERFIL")
+	@JoinColumn(name = "ID_PERFIL")
 	private PerfilEntity perfil;
 	
 	public PerfilUsuarioEntity(PerfilUsuarioDTO perfilUsuario) {

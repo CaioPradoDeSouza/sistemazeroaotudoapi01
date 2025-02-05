@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.napoleao.projeto.dto.UsuarioDTO;
 import br.com.napoleao.projeto.entity.UsuarioEntity;
+import br.com.napoleao.projeto.entity.enums.TipoSituacaoUsuario;
 import br.com.napoleao.projeto.repository.UsuarioRepository;
 
 @Service
@@ -19,6 +20,9 @@ public class UsuarioService {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
+	@Autowired
+	private EmailService emailService;
+	
 	public List<UsuarioDTO> listarTodos(){
 		List<UsuarioEntity> usuarios = usuarioRepository.findAll();
 		return usuarios.stream().map(UsuarioDTO::new).toList();
@@ -28,6 +32,20 @@ public class UsuarioService {
 		UsuarioEntity usuarioEntity = new UsuarioEntity(usuario);
 		usuarioEntity.setSenha(passwordEncoder.encode(usuario.getSenha()));
 		usuarioRepository.save(usuarioEntity);
+	}
+	
+	public void inserirNovoUsuario(UsuarioDTO usuario) {
+		UsuarioEntity usuarioEntity = new UsuarioEntity(usuario);
+		usuarioEntity.setSenha(passwordEncoder.encode(usuario.getSenha()));
+		usuarioEntity.setSituacao(TipoSituacaoUsuario.PENDENTE);
+		//usuarioEntity.setId();
+		usuarioRepository.save(usuarioEntity);
+		
+		//enviar email para verificar conta
+		emailService.enviarEmailTexto(usuario.getEmail(), "Novo cadastro", 
+														  "Você está recebendo um email de cadastro! ");
+		
+		
 	}
 	
 	public UsuarioDTO alterar(UsuarioDTO usuario) {

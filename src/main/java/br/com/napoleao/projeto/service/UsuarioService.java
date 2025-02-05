@@ -1,6 +1,8 @@
 package br.com.napoleao.projeto.service;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -8,14 +10,19 @@ import org.springframework.stereotype.Service;
 
 import br.com.napoleao.projeto.dto.UsuarioDTO;
 import br.com.napoleao.projeto.entity.UsuarioEntity;
+import br.com.napoleao.projeto.entity.UsuarioVerificadorEntity;
 import br.com.napoleao.projeto.entity.enums.TipoSituacaoUsuario;
 import br.com.napoleao.projeto.repository.UsuarioRepository;
+import br.com.napoleao.projeto.repository.UsuarioVerificadorRepository;
 
 @Service
 public class UsuarioService {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	
+	@Autowired
+	private UsuarioVerificadorRepository usuarioVerificadorRepository;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -41,9 +48,16 @@ public class UsuarioService {
 		//usuarioEntity.setId();
 		usuarioRepository.save(usuarioEntity);
 		
+		UsuarioVerificadorEntity verificador = new UsuarioVerificadorEntity();
+		verificador.setUsuario(usuarioEntity);
+		verificador.setUuid(UUID.randomUUID());
+		verificador.setDataExpiracao(Instant.now().plusMillis(900000));
+		usuarioVerificadorRepository.save(verificador);
+	
+		
 		//enviar email para verificar conta
 		emailService.enviarEmailTexto(usuario.getEmail(), "Novo cadastro", 
-														  "Você está recebendo um email de cadastro! ");
+														  "Você está recebendo um email de cadastro o numero para validação é  " + verificador.getUuid());
 		
 		
 	}
